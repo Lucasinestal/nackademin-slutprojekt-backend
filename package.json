@@ -4,7 +4,12 @@
   "description": "## Arbetssätt Git Flow Agilt och Trello",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cross-env NODE_ENV=PROD DB_NAME=SINUS-PRODUCTION-DB node start.js",
+    "stage": "cross-env NODE_ENV=STAGE DB_NAME=SINUS-STAGING-DB node start.js",
+    "dev": "cross-env NODE_ENV=DEV npx nodemon start.js",
+    "test": "cross-env NODE_ENV=TEST npx mocha --recursive",
+    "test-u": "cross-env NODE_ENV=TEST npx mocha ./test/1-unit --recursive",
+    "test-i": "cross-env NODE_ENV=TEST npx mocha ./test/1-integration --recursive"
   },
   "repository": {
     "type": "git",
@@ -21,6 +26,7 @@
     "bcryptjs": "^2.4.3",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
