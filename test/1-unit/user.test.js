@@ -30,7 +30,7 @@ describe('unit test for user models', () => {
         }
 
         // act
-        const userData = await userModel.registerUser(userFields);
+        const userData = await userModel.createUser(userFields);
 
         // assert
         expect(userData).to.be.a('object');
@@ -53,15 +53,41 @@ describe('unit test for user models', () => {
         }
 
         // act
-        await userModel.registerUser(userFields);
+        await userModel.createUser(userFields);
 
         // assert
-        userModel.registerUser(userFields)
+        userModel.createUser(userFields)
             .then(() => {
                 throw new Error('user should already exist')
             })
             .catch((err) => {
                 expect(err instanceof userModel.UserError).to.equal(true);
             })
+    })
+
+    it('Should login the user', async () => {
+         // arrange
+        const userFields = {
+            email: 'test@test.se',
+            password: 'test',
+            name: 'testing tester',
+            role: 'admin',
+            adress: {
+                street: 'testerStreet 3',
+                zip: '123 45',
+                city: 'testingTown'
+            }
+        }
+        await userModel.createUser(userFields)
+        const loginFields = {
+            email: 'test@test.se',
+            password: 'test'
+        }
+
+        // act
+        const result = await userModel.loginUser(loginFields)
+
+        // assert
+        expect(result).to.have.any.keys('token', 'user');
     })
 }) 
