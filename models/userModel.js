@@ -36,14 +36,20 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema)
 
-async function registerUser(newUser) {
-    try {
-        newUser.password = bcrypt.hashSync(newUser.password, 10)
-        const result = await User.create(newUser)
-        return result
-    } catch (error) {
-        return { message: 'Something is wrong' }
+class UserError extends Error {
+    constructor(error) {
+        super(error);
+        this.name = "UserError"; 
     }
 } 
 
-module.exports = { User, registerUser }
+async function registerUser(newUser) {
+    const userExists = await User.findOne({email: newUser.email});
+    if(userExists) throw new UserError('user exists');
+
+    newUser.password = bcrypt.hashSync(newUser.password, 10)
+    const result = await User.create(newUser)
+    return result.toObject()
+} 
+
+module.exports = { User, registerUser, UserError }
