@@ -24,14 +24,33 @@ class ProductError extends Error {
     }
 } 
 
-async function updateProduct(id, updateProduct) {
-    const updated = await Product.findOneAndUpdate(id, updateProduct, {new: true});
-    return updated.toObject();
+const methods = {
+    updateProduct: async function (id, updateProduct) {
+        const updated = await Product.findOneAndUpdate(id, updateProduct, {new: true});
+        return updated.toObject();
+    },
+    
+    createProduct: async function (product) {
+        const created = await Product.create(product)
+        return created.toObject();
+    },
+    
+    deleteProduct: async function (id) {
+        const deleted = await Product.findByIdAndDelete(id);
+        return deleted.toObject();
+    },
+    
+    getProduct: async function (id) {
+        const found = await Product.findById(id);
+        return found.toObject();
+    },
+    
+    getProducts: async function () {
+        const found = await Product.find();
+        return found;
+    }
 }
 
-async function createProduct(product) {
-    const created = await Product.create(product)
-    return created.toObject();
-}
 
-module.exports = { Product, updateProduct, createProduct, ProductError }
+
+module.exports = { Product, ...methods, ProductError }

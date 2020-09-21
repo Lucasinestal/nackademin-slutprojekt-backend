@@ -34,7 +34,7 @@ describe('unit test for product models', () => {
         expect(productData).to.have.any.keys('title', '_id', 'price', 'shortDesc', 'longDesc', 'imgFile');
     })
 
-    it('Should add a new product', async () => {
+    it('Should update a product', async () => {
         // arrange
         const productFields = {
             title: 'Gretas Fury',
@@ -69,12 +69,69 @@ describe('unit test for product models', () => {
         }
 
         // act
-        const productData = await productModel.createProduct(productFields);
-        const deleted = await productModel.Product.findByIdAndDelete(productData._id.toString());
+        const { _id } = await productModel.createProduct(productFields);
+        const deleted = await productModel.deleteProduct(_id.toString());
 
         // assert
-        expect(productData).to.be.a('object');
+        expect(deleted).to.be.a('object');
+        expect(deleted).to.have.any.keys('title', '_id', 'price', 'shortDesc', 'longDesc', 'imgFile');
+    })
 
-        expect(productData).to.have.any.keys('title', '_id', 'price', 'shortDesc', 'longDesc', 'imgFile');
+    it('Should get a product by id', async () => {
+        // arrange
+        const productFields = {
+            title: 'Gretas Fury',
+            price: 999,
+            shortDesc: 'Unisex',
+            longDesc: 'Skate ipsum dolor sit amet...',
+            imgFile: 'skateboard-greta.png'
+        }
+
+        // act
+        const { _id } = await productModel.createProduct(productFields);
+        const found = await productModel.getProduct(_id.toString());
+
+        // assert
+        expect(found).to.be.a('object');
+        expect(found).to.have.any.keys('title', '_id', 'price', 'shortDesc', 'longDesc', 'imgFile');
+    })
+
+    it('Should get all products', async () => {
+        // arrange
+        let products = [
+            {
+                title: 'Gretas Fury',
+                price: 999,
+                shortDesc: 'Unisex',
+                longDesc: 'Skate ipsum dolor sit amet...',
+                imgFile: 'skateboard-greta.png'
+            },
+            {
+                title: 'Gretas Fury',
+                price: 999,
+                shortDesc: 'Unisex',
+                longDesc: 'Skate ipsum dolor sit amet...',
+                imgFile: 'skateboard-greta.png'
+            },
+            {
+                title: 'Gretas Fury',
+                price: 999,
+                shortDesc: 'Unisex',
+                longDesc: 'Skate ipsum dolor sit amet...',
+                imgFile: 'skateboard-greta.png'
+            },
+        ].map(product => productModel.createProduct(product));     
+
+        // act
+        await Promise.all(products);
+
+        const foundProducts = await productModel.getProducts();
+
+        // assert
+        foundProducts.forEach(product => {
+            expect(product).to.be.a('object');
+            expect(product.toObject()).to.have.any.keys('title', '_id', 'price', 'shortDesc', 'longDesc', 'imgFile');
+        })
+
     })
 }) 
