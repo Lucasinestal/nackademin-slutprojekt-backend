@@ -30,7 +30,7 @@ describe('unit test for user models', () => {
         }
 
         // act
-        const userData = await userModel.registerUser(userFields);
+        const userData = await userModel.createUser(userFields);
 
         // assert
         expect(userData).to.be.a('object');
@@ -53,10 +53,10 @@ describe('unit test for user models', () => {
         }
 
         // act
-        await userModel.registerUser(userFields);
+        await userModel.createUser(userFields);
 
         // assert
-        userModel.registerUser(userFields)
+        userModel.createUser(userFields)
             .then(() => {
                 throw new Error('user should already exist')
             })
@@ -78,7 +78,7 @@ describe('unit test for user models', () => {
                 city: 'testingTown'
             }
         }
-        await userModel.registerUser(userFields)
+        await userModel.createUser(userFields)
         const loginFields = {
             email: 'test@test.se',
             password: 'test'
@@ -88,6 +88,6 @@ describe('unit test for user models', () => {
         const result = await userModel.loginUser(loginFields)
 
         // assert
-        console.log(result)
+        expect(result).to.have.any.keys('token', 'user');
     })
 }) 

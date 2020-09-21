@@ -54,7 +54,7 @@ async function createUser(newUser) {
     if (userExists) throw new UserError('user exists');
 
     newUser.password = bcrypt.hashSync(newUser.password, 10)
-    const result = await User.create(newUser, {new: true})
+    const result = await User.create(newUser)
 
     return result.toObject()
 }
