@@ -16,7 +16,8 @@ async function connect() {
             let uri = await mongoMemory.getUri()
             await mongoose.connect(uri, {
                 useNewUrlParser: true,
-                useUnifiedTopology: true
+                useUnifiedTopology: true,
+                useFindAndModify: false
             }, () => console.log('connected to TEST DB'))
             break;
 
