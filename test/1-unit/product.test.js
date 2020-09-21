@@ -74,6 +74,7 @@ describe('unit test for product models', () => {
 
         // assert
         expect(deleted).to.be.a('object');
+        
         expect(deleted).to.have.any.keys('title', '_id', 'price', 'shortDesc', 'longDesc', 'imgFile');
     })
 
