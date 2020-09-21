@@ -1,7 +1,6 @@
 const chai = require('chai')
 const { expect } = chai
 const { connect, disconnect } = require('../../db/index')
-const userModel = require('../../models/userModel')
 const orderModel = require('../../models/orderModel')
 
 describe('unit test for order models', () => {
@@ -28,7 +27,6 @@ describe('unit test for order models', () => {
         const orderData = await orderModel.createOrder(orderFields);
 
         // assert
-        console.log(orderData)
         expect(orderData).to.be.a('object');
 
         expect(orderData).to.have.any.keys('_id', 'timeStamp', 'status', 'items', 'ordervalue');
@@ -51,7 +49,6 @@ describe('unit test for order models', () => {
 
         expect(allOrders).to.be.a("array");
         expect(allOrders).to.have.keys("0","1","2")
-        console.log(allOrders);
     })
 /*
     it('Should return all orders by a user ID', async () => {
