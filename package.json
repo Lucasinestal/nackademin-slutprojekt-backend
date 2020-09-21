@@ -8,8 +8,13 @@
     "stage": "cross-env NODE_ENV=STAGE DB_NAME=SINUS-STAGING-DB node start.js",
     "dev": "cross-env NODE_ENV=DEV npx nodemon start.js",
     "test": "cross-env NODE_ENV=TEST npx mocha --recursive",
-    "test-u": "cross-env NODE_ENV=TEST npx mocha ./test/1-unit --recursive",
+    "test-u": "cross-env NODE_ENV=TEST npx mocha ./test/1-unit/ --recursive",
     "test-i": "cross-env NODE_ENV=TEST npx mocha ./test/1-integration --recursive"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "4.4.1"
+    }
   },
   "repository": {
     "type": "git",
