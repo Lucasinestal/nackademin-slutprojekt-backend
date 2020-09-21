@@ -64,4 +64,30 @@ describe('unit test for user models', () => {
                 expect(err instanceof userModel.UserError).to.equal(true);
             })
     })
+
+    it('Should login the user', async () => {
+         // arrange
+        const userFields = {
+            email: 'test@test.se',
+            password: 'test',
+            name: 'testing tester',
+            role: 'admin',
+            adress: {
+                street: 'testerStreet 3',
+                zip: '123 45',
+                city: 'testingTown'
+            }
+        }
+        await userModel.registerUser(userFields)
+        const loginFields = {
+            email: 'test@test.se',
+            password: 'test'
+        }
+
+        // act
+        const result = await userModel.loginUser(loginFields)
+
+        // assert
+        console.log(result)
+    })
 }) 
