@@ -1,5 +1,6 @@
 const orderModel = require('../models/orderModel');
 const userModel = require('../models/userModel');
+const { ObjectId } = require('mongoose').Types;
 
 async function getOrders(req, res) {
     try {
@@ -8,20 +9,12 @@ async function getOrders(req, res) {
 
         if(role === 'admin') {
             res.json(await orderModel.getAllOrders());
-        } 
-
-        const user = await userModel.User.findById(_id).populate([
-            {
-                path: 'orderHistory',
-                model: 'Order',
-                populate: {
-                    path: 'items',
-                    model: 'Product'
-                }
-            }
-        ]);
-
-        res.json(user.orderHistory);
+        } else if(role === 'user') {
+            const user = await userModel.User.findOne({_id}).populate('orderHistory');
+            console.log(user);
+    
+            res.json(user.orderHistory);
+        }
 
     } catch(err) {
         if(err instanceof userModel.UserError) {
@@ -44,10 +37,22 @@ async function getOrder(req, res) {
 
 async function createOrder(req, res) {
     try {
-        const order = req.body;   
-        res.status(201).json(await orderModel.createOrder(order));
+        const order = req.body; 
+        const { role, _id } = req.user;
+        if(role === 'admin') throw new userModel.UserError('Cannot place order as admin') 
+
+        const createdOrder = await orderModel.createOrder(order);  
+        
+        await userModel.User.findByIdAndUpdate(_id, { $push: { orderHistory: new ObjectId(createdOrder._id) } });
+        res.status(201).json(createdOrder)
+
     } catch(err) {
-        res.sendStatus(400)
+        if(err instanceof userModel.UserError) {
+            res.status(403).json(err.message);
+        } else {
+            console.error(err);
+            res.sendStatus(400)
+        }
     }     
 }
 

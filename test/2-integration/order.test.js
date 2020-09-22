@@ -45,8 +45,25 @@ describe('integration tests for orders', () => {
             }
         }
 
+        const userData2 = {
+            email: 'test22@test.se',
+            password: 'test',
+            name: 'testing tester',
+            role: 'user',
+            adress: {
+                street: 'testerStreet 3',
+                zip: '123 45',
+                city: 'testingTown'
+            }
+        }
+
         const userCredentials = {
             email: 'test2@test.se',
+            password: 'test',
+        }
+
+        const userCredentials2 = {
+            email: 'test22@test.se',
             password: 'test',
         }
 
@@ -57,9 +74,11 @@ describe('integration tests for orders', () => {
 
         await userModel.createUser(adminData)
         await userModel.createUser(userData)
+        await userModel.createUser(userData2)
 
         this.currentTest.admin = await userModel.loginUser(adminCredentials);
         this.currentTest.user = await userModel.loginUser(userCredentials);
+        this.currentTest.user2 = await userModel.loginUser(userCredentials2);
     })
 
     it('Should place an order', async function() {
@@ -125,9 +144,68 @@ describe('integration tests for orders', () => {
 
         const res = await request(app)
             .get('/api/orders')
+            .set("Authorization", `Bearer ${adminToken}`)
+
+        // assert
+        expect(res).to.have.status(200)
+    })
+
+    it('Should only return orders created by specific user', async function() {
+
+        const userToken = this.test.user.token;
+        const userToken2 = this.test.user2.token;
+
+        // arrange
+        let orders = [
+            {
+                status: 'inProcess',
+                orderValue: 999
+            },
+            {
+                status: 'inProcess',
+                orderValue: 999
+            },
+            {
+                status: 'inProcess',
+                orderValue: 999
+            },
+        ]   
+
+        productModel.createProduct({
+            title: "wowza",
+            price: 1337
+        })
+
+        // act
+        await Promise.all(
+            orders.map(order => request(app)
+                .post('/api/orders')
+                .set('Content-Type', 'application/json')
+                .set("Authorization", `Bearer ${userToken}`)
+                .send(order)
+            )
+        )
+
+        orders = orders.map(order => {
+            order.orderValue = 6969;
+            return order;
+        })
+
+        await Promise.all(
+            orders.map(order => request(app)
+                .post('/api/orders')
+                .set('Content-Type', 'application/json')
+                .set("Authorization", `Bearer ${userToken2}`)
+                .send(order)
+            )
+        )
+
+        const res = await request(app)
+            .get('/api/orders')
             .set("Authorization", `Bearer ${userToken}`)
 
         // assert
+        expect(res.body.length).to.equal(3);
         expect(res).to.have.status(200)
     })
 }) 
