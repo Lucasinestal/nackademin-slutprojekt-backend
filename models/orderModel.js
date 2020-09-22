@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: true
+        default: 'inProgress'
     },
     items: [{
         type: mongoose.Schema.Types.ObjectId,
