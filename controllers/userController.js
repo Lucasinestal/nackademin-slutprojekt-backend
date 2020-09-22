@@ -9,13 +9,24 @@ async function registerUser(req, res) {
         }
         res.json(await userModel.loginUser(userLogin))
     } catch (error) {
-        if(error instanceof userModel.UserError) {
-            res.json(error.message) 
+        if (error instanceof userModel.UserError) {
+            res.json(error.message)
         } else {
-            res.json({message: 'Something went wrong'})
+            res.json({ message: 'Something went wrong' })
         }
     }
 }
 
+async function authUser(req, res) {
+    try {
+        res.json(await userModel.loginUser(req.body.userLoginData))
+    } catch (error) {
+        if (error instanceof userModel.UserError) {
+            res.json(error.message)
+        } else {
+            res.json({ message: 'Something went wrong' })
+        }
+    }
+}
 
-module.exports = { registerUser }
+module.exports = { registerUser, authUser }

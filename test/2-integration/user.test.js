@@ -52,4 +52,18 @@ describe('User integration test', function () {
             })
 
     })
+    it('Should login the user', async function () {
+        await userModel.createUser(this.test.user)
+        const credentials = this.test.loginUser
+        await request(app)
+            .post('/api/auth')
+            .set('Content-Type', 'application/json')
+            .send(credentials)
+            .then(function(res){
+                console.log(res.body)
+            })            
+            .catch(function (err) {
+                console.log(err)
+            })
+    })
 })
