@@ -4,6 +4,8 @@ const orderRouter = require('./routers/orderRouter')
 const productRouter = require('./routers/productRouter')
 const userRouter = require('./routers/userRouter')
 
+app.use( express.json() )
+app.use( express.urlencoded() )
 app.use( express.static('public') )
 
 //Routers

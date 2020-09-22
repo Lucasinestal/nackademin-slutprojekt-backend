@@ -3,18 +3,16 @@ const mongoose = require('mongoose')
 const orderSchema = new mongoose.Schema({
     timeStamp: {
         type: Date,
-        required: true
+        default: Date.now()
     },
     status: {
         type: String,
         required: true
     },
-    items: [ 
-            { 
-        type : String, 
-        required : true 
-        } 
-    ],
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
     orderValue: {
         type: Number,
         required: true
@@ -30,7 +28,22 @@ async function createOrder(newOrder) {
 } 
 
 async function getAllOrders() {
-    const result = await Order.find()
+    const result = await Order.find().populate([
+        {
+            path: 'items',
+            model: 'Product'
+        }
+    ])
+    return result;
+}
+
+async function getOrder(_id) {
+    const result = await Order.findById(_id).populate([
+        {
+            path: 'items',
+            model: 'Product'
+        }
+    ])
     return result;
 }
 
@@ -40,6 +53,13 @@ async function getAllOrdersByUser(user) {
     return result
 }
 
+class OrderError extends Error {
+    constructor(error) {
+        super(error);
+        this.name = "ProductError"; 
+    }
+} 
 
 
-module.exports = { Order, createOrder, getAllOrders }
+
+module.exports = { Order, createOrder, getOrder, OrderError, getAllOrders }
