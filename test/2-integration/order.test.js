@@ -17,9 +17,49 @@ describe('integration tests for orders', () => {
         await disconnect()
     })
 
-    beforeEach(async () => {
+    beforeEach(async function() {
         await productModel.Product.deleteMany({});
         await orderModel.Order.deleteMany({});
+        await userModel.User.deleteMany({});
+        const adminData = {
+            email: 'test@test.se',
+            password: 'test',
+            name: 'testing tester',
+            role: 'admin',
+            adress: {
+                street: 'testerStreet 3',
+                zip: '123 45',
+                city: 'testingTown'
+            }
+        }
+
+        const userData = {
+            email: 'test2@test.se',
+            password: 'test',
+            name: 'testing tester',
+            role: 'user',
+            adress: {
+                street: 'testerStreet 3',
+                zip: '123 45',
+                city: 'testingTown'
+            }
+        }
+
+        const userCredentials = {
+            email: 'test2@test.se',
+            password: 'test',
+        }
+
+        const adminCredentials = {
+            email: 'test@test.se',
+            password: 'test',
+        }
+
+        await userModel.createUser(adminData)
+        await userModel.createUser(userData)
+
+        this.currentTest.admin = await userModel.loginUser(adminCredentials);
+        this.currentTest.user = await userModel.loginUser(userCredentials);
     })
 
     it('Should place an order', async function() {
@@ -30,10 +70,13 @@ describe('integration tests for orders', () => {
             orderValue: 999
         } 
 
+        const token = this.test.user.token;
+
         // act
         await request(app)
             .post('/api/orders')
             .set('Content-Type', 'application/json')
+            .set("Authorization", `Bearer ${token}`)
             .send(order)
             .then(res => {
                 // assert
@@ -44,7 +87,10 @@ describe('integration tests for orders', () => {
             })
     })
 
-    it('Should get orders', async function() {
+    it('Should get all orders for admin', async function() {
+
+        const userToken = this.test.user.token;
+        const adminToken = this.test.admin.token;
 
         // arrange
         const orders = [
@@ -72,12 +118,14 @@ describe('integration tests for orders', () => {
             orders.map(order => request(app)
                 .post('/api/orders')
                 .set('Content-Type', 'application/json')
+                .set("Authorization", `Bearer ${userToken}`)
                 .send(order)
             )
         )
 
         const res = await request(app)
             .get('/api/orders')
+            .set("Authorization", `Bearer ${userToken}`)
 
         // assert
         expect(res).to.have.status(200)

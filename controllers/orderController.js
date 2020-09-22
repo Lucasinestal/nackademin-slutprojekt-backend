@@ -3,25 +3,25 @@ const userModel = require('../models/userModel');
 
 async function getOrders(req, res) {
     try {
-        //if(!req.user) throw new userModel.UserError('Cannot submit order without user') 
-        // const { role, _id } = req.user;
+        if(!req.user) throw new userModel.UserError('Cannot submit order without user') 
+        const { role, _id } = req.user;
 
-        if(/*role === 'admin'*/ true) {
+        if(role === 'admin') {
             res.json(await orderModel.getAllOrders());
         } 
 
-        // const user = await userModel.User.findById(_id).populate([
-        //     {
-        //         path: 'orderHistory',
-        //         model: 'Order',
-        //         populate: {
-        //             path: 'items',
-        //             model: 'Product'
-        //         }
-        //     }
-        // ]);
+        const user = await userModel.User.findById(_id).populate([
+            {
+                path: 'orderHistory',
+                model: 'Order',
+                populate: {
+                    path: 'items',
+                    model: 'Product'
+                }
+            }
+        ]);
 
-        // res.json(user.orderHistory);
+        res.json(user.orderHistory);
 
     } catch(err) {
         if(err instanceof userModel.UserError) {

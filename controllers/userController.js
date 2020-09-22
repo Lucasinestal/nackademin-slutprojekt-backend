@@ -2,16 +2,21 @@ const userModel = require('../models/userModel')
 
 async function registerUser(req, res) {
     try {
-        const userCreated = await userModel.createUser(req.body.userData)
+        const newUser = req.body 
+
+        await userModel.createUser({...newUser})
+
         const userLogin = {
-            email: userCreated.email,
-            password: req.body.userData.password
+            email: newUser.email,
+            password: newUser.password
         }
+
         res.json(await userModel.loginUser(userLogin))
     } catch (error) {
         if (error instanceof userModel.UserError) {
             res.json(error.message)
         } else {
+            console.error(error);
             res.json({ message: 'Something went wrong' })
         }
     }
@@ -19,7 +24,8 @@ async function registerUser(req, res) {
 
 async function authUser(req, res) {
     try {
-        res.json(await userModel.loginUser(req.body.userLoginData))
+        const credentials = req.body
+        res.json(await userModel.loginUser(credentials))
     } catch (error) {
         if (error instanceof userModel.UserError) {
             res.json(error.message)

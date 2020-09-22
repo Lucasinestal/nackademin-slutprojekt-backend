@@ -8,11 +8,11 @@ const { connect, disconnect } = require('../../db/index')
 const userModel = require('../../models/userModel')
 
 describe('User integration test', function () {
-    before(function () {
-        connect()
+    before(async function () {
+        await connect()
     })
-    after(function () {
-        disconnect()
+    after(async function () {
+        await disconnect()
     })
     beforeEach(async function () {
         await userModel.User.deleteMany({})
@@ -44,7 +44,6 @@ describe('User integration test', function () {
             .set('Content-Type', 'application/json')
             .send(userData)
             .then(function(res){
-                console.log(res.body)
                 expect(res.body).to.have.any.keys('token','user')
             })
             .catch(function (err) {
@@ -60,7 +59,7 @@ describe('User integration test', function () {
             .set('Content-Type', 'application/json')
             .send(credentials)
             .then(function(res){
-                console.log(res.body)
+                expect(res.body).to.have.any.keys('token','user')
             })            
             .catch(function (err) {
                 console.log(err)
