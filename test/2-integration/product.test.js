@@ -2,7 +2,7 @@ const chai = require("chai");
 const chaihttp = require("chai-http");
 chai.use(chaihttp);
 const {expect, request} = chai;
-const app = require("../ ../app");
+const app = require("../../app");
 const productModel = require("../../models/productModel");
 const db = require("../../db/index");
 
@@ -33,6 +33,7 @@ describe("Products Integrations tests" , function (){
         .set("Content-Type", "application/json")
         .send(productFields)
             expect(res.body).to.be.a("object")
+            console.log
             expect(res.body).to.have.status(201)
 
     })
@@ -52,7 +53,7 @@ describe("Products Integrations tests" , function (){
 
         const productData = await productModel.createProduct(productFields);
         const res = await request(app)
-        .patch(`/api/products/${productData,_id}`)
+        .patch(`/api/products/${productData._id}`)
         .set("Content-Type", "application/json")
         .send(updatedProductFields)
             expect(res.body).to.be.a("object")
