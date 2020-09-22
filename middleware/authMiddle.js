@@ -14,3 +14,5 @@ function isAuthenticated(req, res, next) {
         res.sendStatus(403)
     }
 }
+
+module.exports = { isAuthenticated }

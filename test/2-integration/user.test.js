@@ -5,8 +5,6 @@ const { expect, request } = chai
 const app = require('../../app')
 const { connect, disconnect } = require('../../db/index')
 
-const orderModel = require('../../models/orderModel')
-const productModel = require('../../models/productModel')
 const userModel = require('../../models/userModel')
 
 describe('User integration test', function () {
