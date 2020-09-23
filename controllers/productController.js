@@ -36,7 +36,7 @@ async function createProduct(req, res){
 
             const createdProduct = await productModel.createProduct(newProduct);
             console.log('Created product', createdProduct);
-            res.status(201).json(createdProduct);
+            res.status(201).json({product: createdProduct});
         }
     } catch(err){
         console.error(err)
