@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=PROD DB_NAME=SINUS-PRODUCTION-DB node start.js",
     "stage": "cross-env NODE_ENV=STAGE DB_NAME=SINUS-STAGING-DB node start.js",
     "dev": "cross-env NODE_ENV=DEV npx nodemon start.js",
-    "test": "cross-env NODE_ENV=TEST npx mocha --recursive",
+    "test": "npx mocha --recursive",
     "test-u": "cross-env NODE_ENV=TEST npx mocha ./test/1-unit/ --recursive",
     "test-i": "cross-env NODE_ENV=TEST npx mocha ./test/1-integration --recursive"
   },
