@@ -4,12 +4,11 @@
   "description": "## Arbetssätt Git Flow Agilt och Trello",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=PROD DB_NAME=SINUS-PRODUCTION-DB node start.js",
-    "stage": "node start.js",
-    "dev": "cross-env NODE_ENV=DEV npx nodemon start.js",
+    "start": "node start.js",
+    "dev": "npx nodemon start.js",
     "test": "npx mocha --recursive",
-    "test-u": "cross-env NODE_ENV=TEST npx mocha ./test/1-unit/ --recursive",
-    "test-i": "cross-env NODE_ENV=TEST npx mocha ./test/1-integration --recursive"
+    "test-u": "npx mocha ./test/1-unit/ --recursive",
+    "test-i": "npx mocha ./test/1-integration --recursive"
   },
   "config": {
     "mongodbMemoryServer": {

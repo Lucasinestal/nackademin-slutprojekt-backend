@@ -1,1 +1,1 @@
-web: npm run stage
+web: npm start
