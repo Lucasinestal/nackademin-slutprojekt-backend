@@ -12,7 +12,7 @@ describe('unit test for user models', () => {
         await disconnect()
     })
     beforeEach('clean user data', async () => {
-        await userModel.User.deleteMany({})
+        await userModel.deleteAll();
     })
 
     it('Should register a user to the database', async () => {

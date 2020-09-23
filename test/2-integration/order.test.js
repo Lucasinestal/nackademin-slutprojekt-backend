@@ -18,9 +18,9 @@ describe('integration tests for orders', () => {
     })
 
     beforeEach(async function() {
-        await productModel.Product.deleteMany({});
-        await orderModel.Order.deleteMany({});
-        await userModel.User.deleteMany({});
+        await productModel.deleteAll();
+        await orderModel.deleteAll();
+        await userModel.deleteAll();
         const adminData = {
             email: 'test@test.se',
             password: 'test',
