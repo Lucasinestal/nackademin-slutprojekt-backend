@@ -32,10 +32,7 @@ async function createProduct(req, res){
                 imgFile: req.body.imgFile
             }
 
-            console.log('New product', newProduct);
-
             const createdProduct = await productModel.createProduct(newProduct);
-            console.log('Created product', createdProduct);
             res.status(201).json({product: createdProduct});
         }
     } catch(err){
