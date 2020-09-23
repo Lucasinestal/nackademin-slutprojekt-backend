@@ -28,3 +28,4 @@ jobs:
     - run: npm test
       env:
         JWT_SECRET: hehemlig
+        NODE_ENV: TEST
