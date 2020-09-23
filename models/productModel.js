@@ -47,6 +47,15 @@ const methods = {
     getProducts: async function () {
         const found = await Product.find();
         return found;
+    },
+
+    getManyProducts: async function (productIDs) {
+        const found = await Product.find({_id: { $in: productIDs }})
+        return found;
+    },
+
+    deleteAll: async function() {
+        return await Product.deleteMany({});
     }
 }
 

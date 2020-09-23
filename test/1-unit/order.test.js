@@ -11,7 +11,7 @@ describe('unit test for order models', () => {
         await disconnect()
     })
     beforeEach('clear data', async () => {
-        await orderModel.Order.deleteMany({})
+        await orderModel.deleteAll();
     })
 
     it('Should create a new order', async () => {

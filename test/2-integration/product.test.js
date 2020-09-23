@@ -19,8 +19,8 @@ describe("Products Integrations tests", function () {
     })
 
     beforeEach(async function () {
-        await productModel.Product.deleteMany({})
-        await userModel.User.deleteMany({})
+        await productModel.deleteAll();
+        await userModel.deleteAll();
         const credentials = {
                 email: 'test@test.se',
                 password: 'test',

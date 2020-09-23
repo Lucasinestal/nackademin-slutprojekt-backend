@@ -1,7 +1,7 @@
 const orderModel = require('../models/orderModel');
 const userModel = require('../models/userModel');
 const productModel = require('../models/productModel');
-const { ObjectId } = require('mongoose').Types;
+
 
 async function getOrders(req, res) {
     try {
@@ -11,9 +11,9 @@ async function getOrders(req, res) {
         if (role === 'admin') {
             res.json(await orderModel.getAllOrders());
         } else if (role === 'user') {
-            const user = await userModel.User.findOne({ _id }).populate('orderHistory');
+            const orderHistory = await userModel.getOrderHistory(_id)
 
-            res.json(user.orderHistory);
+            res.json(orderHistory);
         }
 
     } catch (err) {
@@ -44,7 +44,7 @@ async function createOrder(req, res) {
         let orderValue = 0;
 
         // Find all unique products in order
-        const foundProducts = await productModel.Product.find({_id: { $in: order.items }})
+        const foundProducts = await productModel.getManyProducts(order.items)
         
         // For each product ID in order.items, match it 
         // with an ID in foundProducts and get its price
@@ -59,7 +59,7 @@ async function createOrder(req, res) {
         const createdOrder = await orderModel.createOrder(order);
         
         // Store order ID as ref in user
-        await userModel.User.findByIdAndUpdate(_id, { $push: { orderHistory: new ObjectId(createdOrder._id) } });
+        await userModel.addOrderToUser(_id, createdOrder._id);
         res.status(201).json(createdOrder)
 
     } catch (err) {

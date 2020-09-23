@@ -2,6 +2,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { ObjectId } = require('mongoose').Types;
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -76,4 +77,17 @@ async function loginUser({ email, password }) {
     return {token, user: dataToToken}
 } 
 
-module.exports = { User, UserError, createUser, loginUser }
+async function addOrderToUser(userID, orderID) {
+    return await User.findByIdAndUpdate(userID, { $push: { orderHistory: new ObjectId(orderID) } });
+}
+
+async function getOrderHistory(userID) {
+    const user = await User.findById( userID ).populate('orderHistory');
+    return user.orderHistory;
+}
+
+async function deleteAll() {
+    return await User.deleteMany({});
+}
+
+module.exports = { User, UserError, createUser, addOrderToUser, getOrderHistory, loginUser, deleteAll }

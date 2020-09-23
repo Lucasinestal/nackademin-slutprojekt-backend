@@ -15,7 +15,7 @@ describe('User integration test', function () {
         await disconnect()
     })
     beforeEach(async function () {
-        await userModel.User.deleteMany({})
+        await userModel.deleteAll();
 
         const userFields = {
             email: 'test@test.se',

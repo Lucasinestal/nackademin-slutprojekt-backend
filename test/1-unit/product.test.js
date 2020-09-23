@@ -12,7 +12,7 @@ describe('unit test for product models', () => {
         await disconnect()
     })
     beforeEach('clean product data', async () => {
-        await productModel.Product.deleteMany({})
+        await productModel.deleteAll();
     })
 
     it('Should add a new product', async () => {

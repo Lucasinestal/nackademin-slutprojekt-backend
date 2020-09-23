@@ -60,6 +60,10 @@ class OrderError extends Error {
     }
 } 
 
+async function deleteAll() {
+    return await Order.deleteMany({});
+}
 
 
-module.exports = { Order, createOrder, getOrder, OrderError, getAllOrders }
+
+module.exports = { Order, createOrder, getOrder, OrderError, getAllOrders, deleteAll }
