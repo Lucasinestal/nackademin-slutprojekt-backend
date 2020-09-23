@@ -25,7 +25,7 @@ class ProductError extends Error {
 
 const methods = {
     updateProduct: async function (id, updateProduct) {
-        const updated = await Product.findOneAndUpdate(id, updateProduct, {new: true});
+        const updated = await Product.findByIdAndUpdate(id, updateProduct, {new: true});
         return updated.toObject();
     },
     

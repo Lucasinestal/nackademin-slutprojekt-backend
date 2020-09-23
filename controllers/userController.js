@@ -11,13 +11,13 @@ async function registerUser(req, res) {
             password: newUser.password
         }
 
-        res.json(await userModel.loginUser(userLogin))
+        res.status(200).json(await userModel.loginUser(userLogin))
     } catch (error) {
         if (error instanceof userModel.UserError) {
-            res.json(error.message)
+            res.status(409).json(error.message)
         } else {
             console.error(error);
-            res.json({ message: 'Something went wrong' })
+            res.status(500).json({ message: 'Something went wrong' })
         }
     }
 }
@@ -25,12 +25,12 @@ async function registerUser(req, res) {
 async function authUser(req, res) {
     try {
         const credentials = req.body
-        res.json(await userModel.loginUser(credentials))
+        res.status(200).json(await userModel.loginUser(credentials))
     } catch (error) {
         if (error instanceof userModel.UserError) {
-            res.json(error.message)
+            res.status(401).json(error.message)
         } else {
-            res.json({ message: 'Something went wrong' })
+            res.status(500).json({ message: 'Something went wrong' })
         }
     }
 }

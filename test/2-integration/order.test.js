@@ -84,9 +84,14 @@ describe('integration tests for orders', () => {
     it('Should place an order', async function() {
 
         // arrange
+        const product = await productModel.createProduct({
+            title: "wowza",
+            price: 1337
+        })
+
         const order =  {
             status: 'inProcess',
-            orderValue: 999
+            items: [product._id]
         } 
 
         const token = this.test.user.token;
@@ -112,25 +117,26 @@ describe('integration tests for orders', () => {
         const adminToken = this.test.admin.token;
 
         // arrange
-        const orders = [
-            {
-                status: 'inProcess',
-                orderValue: 999
-            },
-            {
-                status: 'inProcess',
-                orderValue: 999
-            },
-            {
-                status: 'inProcess',
-                orderValue: 999
-            },
-        ]   
-
-        productModel.createProduct({
+        const product = await productModel.createProduct({
             title: "wowza",
             price: 1337
         })
+
+        const orders = [
+            {
+                status: 'inProcess',
+                items: [product._id],
+
+            },
+            {
+                status: 'inProcess',
+                items: [product._id],
+            },
+            {
+                status: 'inProcess',
+                items: [product._id, product._id],
+            },
+        ]   
 
         // act
         await Promise.all(
@@ -156,25 +162,26 @@ describe('integration tests for orders', () => {
         const userToken2 = this.test.user2.token;
 
         // arrange
-        let orders = [
-            {
-                status: 'inProcess',
-                orderValue: 999
-            },
-            {
-                status: 'inProcess',
-                orderValue: 999
-            },
-            {
-                status: 'inProcess',
-                orderValue: 999
-            },
-        ]   
-
-        productModel.createProduct({
+        const product = await productModel.createProduct({
             title: "wowza",
             price: 1337
         })
+
+        const orders = [
+            {
+                status: 'inProcess',
+                items: [product._id],
+
+            },
+            {
+                status: 'inProcess',
+                items: [product._id],
+            },
+            {
+                status: 'inProcess',
+                items: [product._id, product._id],
+            },
+        ]   
 
         // act
         await Promise.all(
@@ -185,11 +192,6 @@ describe('integration tests for orders', () => {
                 .send(order)
             )
         )
-
-        orders = orders.map(order => {
-            order.orderValue = 6969;
-            return order;
-        })
 
         await Promise.all(
             orders.map(order => request(app)

@@ -23,7 +23,7 @@ async function getProductById(req, res){
 
 async function createProduct(req, res){
     try {
-        if(true){
+        if(req.user.role === "admin"){
             const newProduct = {
                 title: req.body.title,
                 price: req.body.price,
@@ -31,7 +31,11 @@ async function createProduct(req, res){
                 longDesc: req.body.longDesc,
                 imgFile: req.body.imgFile
             }
+
+            console.log('New product', newProduct);
+
             const createdProduct = await productModel.createProduct(newProduct);
+            console.log('Created product', createdProduct);
             res.status(201).json(createdProduct);
         }
     } catch(err){
@@ -42,20 +46,27 @@ async function createProduct(req, res){
 
 async function updateProduct(req,res){
     try{
-        if(true){
+        if(req.user.role === "admin"){
             const id = req.params.id;
-            const updatedFields = req.body;
+            const updatedFields = {
+                title: req.body.title,
+                price: req.body.price,
+                shortDesc: req.body.shortDesc,
+                longDesc: req.body.longDesc,
+                imgFile: req.body.imgFile
+            }
             const updatedProduct = await productModel.updateProduct(id, updatedFields);
             res.status(202).json(updatedProduct);
         }
     }catch(err){
+        console.error(err);
         res.sendStatus(401)
     }
 }
 
 async function deleteProduct(req,res){
     try{
-        if(true){
+        if(req.user.role === "admin"){
             const id = req.params.id;
             const deletedProduct = await productModel.deleteProduct(id);
             res.status(202).json(deletedProduct);

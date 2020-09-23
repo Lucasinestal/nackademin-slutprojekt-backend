@@ -12,7 +12,6 @@ async function getOrders(req, res) {
             res.json(await orderModel.getAllOrders());
         } else if (role === 'user') {
             const user = await userModel.User.findOne({ _id }).populate('orderHistory');
-            console.log(user);
 
             res.json(user.orderHistory);
         }
@@ -43,18 +42,23 @@ async function createOrder(req, res) {
         if (role === 'admin') throw new userModel.UserError('Cannot place order as admin')
 
         let orderValue = 0;
-        let items = await productModel.Product.find({_id: { $in: order.items }})
+
+        // Find all unique products in order
+        const foundProducts = await productModel.Product.find({_id: { $in: order.items }})
         
-        order.items.forEach(item => {
-            const index = items.findIndex(dbItem => dbItem._id.toString() === item);
-            const price = items[index].price
+        // For each product ID in order.items, match it 
+        // with an ID in foundProducts and get its price
+        order.items.forEach(productID => {
+            const index = foundProducts.findIndex(product => product._id.toString() === productID);
+            const price = foundProducts[index].price
             orderValue += price;
         })
 
         order.orderValue = orderValue;
 
         const createdOrder = await orderModel.createOrder(order);
-
+        
+        // Store order ID as ref in user
         await userModel.User.findByIdAndUpdate(_id, { $push: { orderHistory: new ObjectId(createdOrder._id) } });
         res.status(201).json(createdOrder)
 

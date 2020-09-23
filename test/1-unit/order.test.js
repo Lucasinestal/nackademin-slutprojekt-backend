@@ -17,9 +17,8 @@ describe('unit test for order models', () => {
     it('Should create a new order', async () => {
         // arrange
         const orderFields =  {
-            timeStamp: Date.now(), 
             status: 'inProcess',
-            items: ["wingqunggq", "uqngqnwggwq"],
+            items: [],
             orderValue: 999
         } 
 
@@ -35,9 +34,8 @@ describe('unit test for order models', () => {
     it('Should return all orders', async () => {
 
         const orderFields =  {
-            timeStamp: Date.now(), 
             status: 'inProcess',
-            items: ["wingqunggq", "uqngqnwggwq"],
+            items: [],
             orderValue: 999
         } 
 
@@ -50,28 +48,6 @@ describe('unit test for order models', () => {
         expect(allOrders).to.be.a("array");
         expect(allOrders).to.have.keys("0","1","2")
     })
-/*
-    it('Should return all orders by a user ID', async () => {
 
-        const orderFields =  {
-            timeStamp: Date.now(), 
-            status: 'inProcess',
-            items: ["wingqunggq", "uqngqnwggwq"],
-            orderValue: 999
-        } 
-
-        await orderModel.createOrder(orderFields);
-        await orderModel.createOrder(orderFields);
-        await orderModel.createOrder(orderFields);
-        await orderModel.createOrder(orderFields);
-        await orderModel.createOrder(orderFields);
-
-        const allOrders = await orderModel.getAllOrdersByUser();
-        
-        expect(allOrders).to.be.a("array");
-        expect(allOrders).to.have.keys("0","1","2","3","4")
-        console.log(allOrders);
-
-    })*/
 
 }) 
